@@ -1,5 +1,5 @@
 ////////////////////////////
-//To make sure assert works:
+// To make sure assert works:
 #ifdef NDEBUG
 #undef NDEBUG
 #endif
@@ -9,7 +9,7 @@
 #include <assert.h>
 
 int main() {
-    //Addition
+    // Addition
     assert((BigNumber(50) + BigNumber(32)).getString() == "82");
     assert((BigNumber(5) + BigNumber(622)).getString() == "627");
     assert((BigNumber("-33") + BigNumber("8")).getString() == "-25");
@@ -24,12 +24,13 @@ int main() {
     assert(ad1.getString() == "700");
     assert(ad1 == 700);
 
-    //Subtraction
+    // Subtraction
     assert((BigNumber("50") - BigNumber("32")).getString() == "18");
     assert((BigNumber("50") - BigNumber("60")).getString() == "-10");
     assert((BigNumber("0") - BigNumber("46")).getString() == "-46");
     assert((BigNumber("50") - BigNumber("50")).getString() == "0");
-    assert((BigNumber("482847") - BigNumber("89787941")).getString() == "-89305094");
+    assert((BigNumber("482847") - BigNumber("89787941")).getString() ==
+           "-89305094");
     assert((BigNumber("6828") - BigNumber("1")).getString() == "6827");
     assert((BigNumber("100") - BigNumber("50")).getString() == "50");
     assert((BigNumber("42") - BigNumber("49")).getString() == "-7");
@@ -42,7 +43,7 @@ int main() {
     sb1 -= "20";
     assert(sb1 == BigNumber(-40));
 
-    //Multiplication
+    // Multiplication
     assert((BigNumber("4") * BigNumber("12")).getString() == "48");
     assert((BigNumber("3002") * BigNumber("1")).getString() == "3002");
     assert((BigNumber("99") * BigNumber("0")).getString() == "0");
@@ -57,7 +58,7 @@ int main() {
     ml1 *= "5000";
     assert(ml1 == 150000);
 
-    //Division
+    // Division
     assert(BigNumber("25").divide(BigNumber("5")) == 5);
     assert(BigNumber("48").divide(BigNumber("6")) == 8);
     assert(BigNumber("100").divide(BigNumber("5")) == 20);
@@ -78,7 +79,7 @@ int main() {
     dv1 /= 5;
     assert(dv1 == "5097");
 
-    //Exponentiation
+    // Exponentiation
     assert((BigNumber("2").pow(3)).getString() == "8");
     assert((BigNumber("1").pow(38)).getString() == "1");
     assert((BigNumber("5").pow(2)).getString() == "25");
@@ -87,24 +88,24 @@ int main() {
     assert((BigNumber("5").pow(0)).getString() == "1");
     assert((BigNumber("-5").pow(2)).getString() == "25");
 
-    //Equals
+    // Equals
     assert(BigNumber("4") == BigNumber("4"));
     assert(BigNumber("-3") == BigNumber("-3"));
     assert(BigNumber("0") == BigNumber("0"));
     assert(BigNumber("938283828178273") == BigNumber("938283828178273"));
 
-    //Greater than
+    // Greater than
     assert(BigNumber("5") > BigNumber("2"));
     assert(BigNumber("30") > BigNumber("-40"));
     assert(BigNumber("-5") > BigNumber("-10"));
     assert(BigNumber("0") > BigNumber("-1"));
 
-    //Less than
+    // Less than
     assert(BigNumber("10") < BigNumber("20"));
     assert(BigNumber("-5") < BigNumber("0"));
     assert(BigNumber("30") < BigNumber("30000"));
 
-    //Greater than or equal to
+    // Greater than or equal to
     assert(BigNumber("5") >= BigNumber("0"));
     assert(BigNumber("-5") >= BigNumber("-5"));
     assert(BigNumber("-5") >= BigNumber("-10"));
@@ -112,33 +113,33 @@ int main() {
     assert(BigNumber("32") >= BigNumber("-32"));
     assert(BigNumber("2") >= BigNumber("0001"));
 
-    //Less than or equal to
+    // Less than or equal to
     assert(BigNumber("5") <= BigNumber("10"));
     assert(BigNumber("0") <= BigNumber("0"));
     assert(BigNumber("-5") <= BigNumber("0"));
     assert(BigNumber("30") <= BigNumber("30"));
     assert(BigNumber("400") <= BigNumber("392342"));
 
-    //Index
+    // Index
     assert(BigNumber("423")[1] == 2);
     assert(BigNumber("0")[0] == 0);
     assert(BigNumber("-5")[1] == 5);
 
-    //Even
+    // Even
     assert(BigNumber("426").isEven());
     assert(BigNumber("-20").isEven());
 
-    //Odd
+    // Odd
     assert(BigNumber("83").isOdd());
     assert(BigNumber("-27").isOdd());
 
-    //Positive
+    // Positive
     assert(BigNumber("38").isPositive());
 
-    //Negative
+    // Negative
     assert(BigNumber("-28382").isNegative());
 
-    //Increment/Decrement operators
+    // Increment/Decrement operators
     assert(BigNumber("5")--.getString() == "5");
     assert((--BigNumber("5")).getString() == "4");
     assert(BigNumber("10")++.getString() == "10");
@@ -154,18 +155,18 @@ int main() {
     --a;
     assert(a.getString() == "10");
 
-    //Absolute value
+    // Absolute value
     assert(BigNumber("45").abs().getString() == "45");
     assert(BigNumber("-325").abs().getString() == "325");
 
-    //Digits
+    // Digits
     assert(BigNumber("28374765").digits() == 8);
     assert(BigNumber("-3092").digits() == 4);
 
-    //Set string
+    // Set string
     assert(BigNumber("234").setString("-45").getString() == "-45");
 
-    //Assignment operator
+    // Assignment operator
     BigNumber c(10);
     c = 5;
     assert(c == 5);
@@ -176,7 +177,7 @@ int main() {
     assert(c == BigNumber(83833));
     assert(c == BigNumber("83833"));
 
-    //Equals testing
+    // Equals testing
     BigNumber d(40);
     assert(d == 40);
     assert(d == "40");
@@ -187,6 +188,19 @@ int main() {
     d = "40";
     assert(d == 40);
 
+    // Trim leading zeros in all cases
+    assert(BigNumber("001").trimLeadingZeros() == 1);
+    assert(BigNumber("000").trimLeadingZeros() == 0);
+    assert(BigNumber("000").trimLeadingZeros().trimLeadingZeros() == 0);
+    assert(BigNumber("0080").trimLeadingZeros() == 80);
+    assert(BigNumber("00802342").trimLeadingZeros() == 802342);
+    assert(BigNumber("001") == 1);
+    assert(BigNumber("000") == 0);
+    assert(BigNumber("") == 0);
+    assert(BigNumber("") == "0");
+    BigNumber lz1("");
+    lz1 = "007";
+    assert(lz1 == "7");
 
     std::cout << "BigNumber ran successfully." << std::endl;
 }
