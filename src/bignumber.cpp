@@ -3,33 +3,31 @@
  *
  * Copyright (c) 2015 Mark Guerra
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this
+ * software and associated documentation files (the "Software"), to deal in the Software
+ * without restriction, including without limitation the rights to use, copy, modify, merge,
+ * publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
+ * to whom the Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
+ * AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+ * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #include <iostream>
 #include <sstream>
 #include <stack>
 
+// Include bignumber interface header file
 #include "bignumber.h"
 
 namespace {
-std::string trimLeadingZeros(std::string const &input) {
+std::string trimLeadingZeros(std::string const& input) {
     std::string result{input};
     auto first_nonzero_index = result.find_first_not_of('0');
     if (first_nonzero_index != std::string::npos) {
@@ -40,13 +38,11 @@ std::string trimLeadingZeros(std::string const &input) {
     return result;
 }
 
-} // namespace
+}  // namespace
 
-BigNumber::BigNumber(std::string number)
-    : _numberString(::trimLeadingZeros(number)) {}
+BigNumber::BigNumber(std::string number) : _numberString(::trimLeadingZeros(number)) {}
 
-BigNumber::BigNumber(long long number)
-    : _numberString(std::to_string(number)) {}
+BigNumber::BigNumber(long long number) : _numberString(std::to_string(number)) {}
 
 BigNumber BigNumber::add(BigNumber other) {
     BigNumber b1 = other > *this ? other : *this;
@@ -67,8 +63,7 @@ BigNumber BigNumber::add(BigNumber other) {
         b2._numberString.insert(b2._numberString.begin(), '0');
     }
     for (int i = int(b1._numberString.size() - 1); i >= 0; --i) {
-        int sum =
-            (b1._numberString[i] - '0') + (b2._numberString[i] - '0') + carry;
+        int sum = (b1._numberString[i] - '0') + (b2._numberString[i] - '0') + carry;
         carry = 0;
         if (sum <= 9 || i == 0) {
             results.insert(0, std::to_string(sum));
@@ -80,11 +75,11 @@ BigNumber BigNumber::add(BigNumber other) {
     return BigNumber(results);
 }
 
-BigNumber BigNumber::addll(const long long &other) {
+BigNumber BigNumber::addll(const long long& other) {
     return this->add(BigNumber(other));
 }
 
-BigNumber BigNumber::addstr(const std::string &other) {
+BigNumber BigNumber::addstr(const std::string& other) {
     return this->add(BigNumber(other));
 }
 
@@ -119,15 +114,13 @@ BigNumber BigNumber::subtract(BigNumber other) {
     // than 1 100 - 5 is an example. This code adds 0's to make it, for example,
     // 100 - 05, which allows the rest of the subtraction code to work.
     if (b1._numberString.size() - b2.getString().size() > 1) {
-        for (unsigned long i = 0;
-             i < b1._numberString.size() - b2.getString().size() - 1; ++i) {
+        for (unsigned long i = 0; i < b1._numberString.size() - b2.getString().size() - 1; ++i) {
             b2._numberString.insert(b2._numberString.begin(), '0');
         }
     }
     int i = int(b1._numberString.size() - 1);
     for (int j = int(b2._numberString.size() - 1); j >= 0; --j) {
-        if (((b1._numberString[i] - '0') < (b2._numberString[j] - '0')) &&
-            i > 0) {
+        if (((b1._numberString[i] - '0') < (b2._numberString[j] - '0')) && i > 0) {
             n = char((b1._numberString[i] - '0') + 10);
             takeOffOne = true;
             if (j > 0 || b1._numberString[i - 1] != '0') {
@@ -155,8 +148,7 @@ BigNumber BigNumber::subtract(BigNumber other) {
             ss << "0";
         } else {
             if (n <= 0) {
-                ss << ((b1._numberString[i] - '0') -
-                       (b2._numberString[j] - '0'));
+                ss << ((b1._numberString[i] - '0') - (b2._numberString[j] - '0'));
             } else {
                 ss << (n - (b2._numberString[j] - '0'));
             }
@@ -168,8 +160,7 @@ BigNumber BigNumber::subtract(BigNumber other) {
     }
     if (takeOffOne) {
         std::string number = "";
-        for (int j = b1._numberString.length() - b2._numberString.length() - 1;
-             j >= 0; --j) {
+        for (int j = b1._numberString.length() - b2._numberString.length() - 1; j >= 0; --j) {
             if (b1._numberString[j] == '0') {
                 number += "0";
                 continue;
@@ -206,11 +197,11 @@ BigNumber BigNumber::subtract(BigNumber other) {
     return BigNumber(results);
 }
 
-BigNumber BigNumber::subtractll(const long long &other) {
+BigNumber BigNumber::subtractll(const long long& other) {
     return this->subtract(BigNumber(other));
 }
 
-BigNumber BigNumber::subtractstr(const std::string &other) {
+BigNumber BigNumber::subtractstr(const std::string& other) {
     return this->subtract(BigNumber(other));
 }
 
@@ -232,16 +223,13 @@ BigNumber BigNumber::multiply(BigNumber other) {
     int zeroCounter = 0;
     BigNumber b = 0;
 
-    for (unsigned int i = 0;
-         i < b1._numberString.size() - b2._numberString.size(); ++i) {
+    for (unsigned int i = 0; i < b1._numberString.size() - b2._numberString.size(); ++i) {
         b2._numberString.insert(b2._numberString.begin(), '0');
     }
     for (long long int i = (b2._numberString.size() - 1); i >= 0; --i) {
         std::string rr;
         for (long long int j = int(b1._numberString.size() - 1); j >= 0; --j) {
-            int val =
-                ((b2._numberString[i] - '0') * (b1._numberString[j] - '0')) +
-                carry;
+            int val = ((b2._numberString[i] - '0') * (b1._numberString[j] - '0')) + carry;
             carry = 0;
             if (val > 9 && j != 0) {
                 carry = val / 10;
@@ -259,8 +247,7 @@ BigNumber BigNumber::multiply(BigNumber other) {
         b += BigNumber(rr);
     }
     if (b._numberString.find_first_not_of('0') != std::string::npos) {
-        b.setString(
-            b._numberString.erase(0, b._numberString.find_first_not_of('0')));
+        b.setString(b._numberString.erase(0, b._numberString.find_first_not_of('0')));
     } else {
         // In the case of all 0's, we only want to return one of them
         b.setString("0");
@@ -268,7 +255,7 @@ BigNumber BigNumber::multiply(BigNumber other) {
     return b;
 }
 
-BigNumber BigNumber::multiplyll(const long long &other) {
+BigNumber BigNumber::multiplyll(const long long& other) {
     if (other == 0)
         return 0;
     if (other == 1)
@@ -280,7 +267,7 @@ BigNumber BigNumber::multiplyll(const long long &other) {
     return *this;
 }
 
-BigNumber BigNumber::multiplystr(const std::string &other) {
+BigNumber BigNumber::multiplystr(const std::string& other) {
     return this->multiply(BigNumber(other));
 }
 
@@ -310,11 +297,11 @@ BigNumber BigNumber::divide(BigNumber other) {
     return quotient;
 }
 
-BigNumber BigNumber::dividell(const long long &other) {
+BigNumber BigNumber::dividell(const long long& other) {
     return this->divide(BigNumber(other));
 }
 
-BigNumber BigNumber::dividestr(const std::string &other) {
+BigNumber BigNumber::dividestr(const std::string& other) {
     return this->divide(BigNumber(other));
 }
 
@@ -336,9 +323,11 @@ BigNumber BigNumber::pow(int exponent) {
     return result;
 }
 
-std::string BigNumber::getString() { return this->_numberString; }
+std::string BigNumber::getString() {
+    return this->_numberString;
+}
 
-BigNumber BigNumber::setString(const std::string &newStr) {
+BigNumber BigNumber::setString(const std::string& newStr) {
     this->_numberString = newStr;
     return *this;
 }
@@ -356,15 +345,15 @@ BigNumber BigNumber::trimLeadingZeros() {
     return BigNumber(::trimLeadingZeros(this->getString()));
 }
 
-bool BigNumber::equals(const BigNumber &other) {
+bool BigNumber::equals(const BigNumber& other) {
     return this->_numberString == other._numberString;
 }
 
-bool BigNumber::equals(const long long &other) {
+bool BigNumber::equals(const long long& other) {
     return this->getString() == std::to_string(other);
 }
 
-bool BigNumber::equals(const std::string &other) {
+bool BigNumber::equals(const std::string& other) {
     return this->getString() == other;
 }
 
@@ -372,77 +361,96 @@ unsigned int BigNumber::digits() {
     return this->_numberString.length() - static_cast<int>(this->isNegative());
 }
 
-bool BigNumber::isNegative() const { return this->_numberString[0] == '-'; }
+bool BigNumber::isNegative() const {
+    return this->_numberString[0] == '-';
+}
 
-bool BigNumber::isPositive() { return !this->isNegative(); }
+bool BigNumber::isPositive() {
+    return !this->isNegative();
+}
 
 bool BigNumber::isEven() {
     return this->_numberString[this->_numberString.length() - 1] % 2 == 0;
 }
 
-bool BigNumber::isOdd() { return !this->isEven(); }
-
-BigNumber BigNumber::abs() const {
-    return BigNumber(this->_numberString.substr(
-        static_cast<unsigned int>(this->isNegative())));
+bool BigNumber::isOdd() {
+    return !this->isEven();
 }
 
-std::ostream &operator<<(std::ostream &os, const BigNumber &num) {
+BigNumber BigNumber::abs() const {
+    return BigNumber(this->_numberString.substr(static_cast<unsigned int>(this->isNegative())));
+}
+
+std::ostream& operator<<(std::ostream& os, const BigNumber& num) {
     os << num._numberString;
     return os;
 }
 
-BigNumber operator+(BigNumber b1, const BigNumber &b2) { return b1.add(b2); }
+BigNumber operator+(BigNumber b1, const BigNumber& b2) {
+    return b1.add(b2);
+}
 
-BigNumber operator+(BigNumber b1, const long long &b2) { return b1.addll(b2); }
+BigNumber operator+(BigNumber b1, const long long& b2) {
+    return b1.addll(b2);
+}
 
-BigNumber operator+(BigNumber b1, const std::string &b2) {
+BigNumber operator+(BigNumber b1, const std::string& b2) {
     return b1.addstr(b2);
 }
 
-BigNumber operator-(BigNumber b1, const BigNumber &b2) {
+BigNumber operator-(BigNumber b1, const BigNumber& b2) {
     return b1.subtract(b2);
 }
 
-BigNumber operator-(BigNumber b1, const long long &b2) {
+BigNumber operator-(BigNumber b1, const long long& b2) {
     return b1.subtractll(b2);
 }
 
-BigNumber operator-(BigNumber b1, const std::string &b2) {
+BigNumber operator-(BigNumber b1, const std::string& b2) {
     return b1.subtractstr(b2);
 }
 
-BigNumber operator*(BigNumber b1, const BigNumber &b2) {
+BigNumber operator*(BigNumber b1, const BigNumber& b2) {
     return b1.multiply(b2);
 }
 
-BigNumber operator*(BigNumber b1, const long long &b2) {
+BigNumber operator*(BigNumber b1, const long long& b2) {
     return b1.multiplyll(b2);
 }
 
-BigNumber operator*(BigNumber b1, const std::string &b2) {
+BigNumber operator*(BigNumber b1, const std::string& b2) {
     return b1.multiplystr(b2);
 }
 
-BigNumber operator/(BigNumber b1, const BigNumber &b2) { return b1.divide(b2); }
+BigNumber operator/(BigNumber b1, const BigNumber& b2) {
+    return b1.divide(b2);
+}
 
-BigNumber operator/(BigNumber b1, const long long &b2) {
+BigNumber operator/(BigNumber b1, const long long& b2) {
     return b1.dividell(b2);
 }
 
-BigNumber operator/(BigNumber b1, const std::string &b2) {
+BigNumber operator/(BigNumber b1, const std::string& b2) {
     return b1.dividestr(b2);
 }
 
-BigNumber operator^(BigNumber b1, const int &b2) { return b1.pow(b2); }
+BigNumber operator^(BigNumber b1, const int& b2) {
+    return b1.pow(b2);
+}
 
-bool operator==(BigNumber b1, const BigNumber &b2) { return b1.equals(b2); }
+bool operator==(BigNumber b1, const BigNumber& b2) {
+    return b1.equals(b2);
+}
 
-bool operator==(BigNumber b1, const long long &b2) { return b1.equals(b2); }
+bool operator==(BigNumber b1, const long long& b2) {
+    return b1.equals(b2);
+}
 
-bool operator==(BigNumber b1, const std::string &b2) { return b1.equals(b2); }
+bool operator==(BigNumber b1, const std::string& b2) {
+    return b1.equals(b2);
+}
 
-bool operator>(BigNumber b1, const BigNumber &b2) {
+bool operator>(BigNumber b1, const BigNumber& b2) {
     if (b1.isNegative() || b2.isNegative()) {
         if (b1.isNegative() && b2.isNegative()) {
             BigNumber bt = b2;
@@ -474,107 +482,106 @@ bool operator>(BigNumber b1, const BigNumber &b2) {
     return false;
 }
 
-bool operator<(BigNumber b1, const BigNumber &b2) {
+bool operator<(BigNumber b1, const BigNumber& b2) {
     return !(b1 == b2) && !(b1 > b2);
 }
 
-bool operator>=(BigNumber b1, const BigNumber &b2) {
+bool operator>=(BigNumber b1, const BigNumber& b2) {
     return b1 > b2 || b1 == b2;
 }
 
-bool operator<=(BigNumber b1, const BigNumber &b2) {
+bool operator<=(BigNumber b1, const BigNumber& b2) {
     return b1 < b2 || b1 == b2;
 }
 
 unsigned int BigNumber::operator[](int index) {
     if (this->_numberString[index] == '-') {
-        std::cerr << "You cannot get the negative sign from the number"
-                  << std::endl;
+        std::cerr << "You cannot get the negative sign from the number" << std::endl;
     }
     return static_cast<unsigned int>(this->_numberString[index] - '0');
 }
 
-BigNumber &BigNumber::operator=(const BigNumber &other) {
+BigNumber& BigNumber::operator=(const BigNumber& other) {
     this->_numberString = other._numberString;
     return *this;
 }
 
-BigNumber &BigNumber::operator=(const long long &other) {
+BigNumber& BigNumber::operator=(const long long& other) {
     this->_numberString = std::to_string(other);
     return *this;
 }
 
-BigNumber &BigNumber::operator=(const std::string &other) {
+BigNumber& BigNumber::operator=(const std::string& other) {
     this->_numberString = ::trimLeadingZeros(other);
     return *this;
 }
 
-BigNumber &BigNumber::operator+=(const BigNumber &other) {
+BigNumber& BigNumber::operator+=(const BigNumber& other) {
     *this = *this + other;
     return *this;
 }
 
-BigNumber &BigNumber::operator+=(const long long &other) {
+BigNumber& BigNumber::operator+=(const long long& other) {
     *this = *this + other;
     return *this;
 }
 
-BigNumber &BigNumber::operator+=(const std::string &other) {
+BigNumber& BigNumber::operator+=(const std::string& other) {
     *this = *this + other;
     return *this;
 }
 
-BigNumber &BigNumber::operator-=(const BigNumber &other) {
+BigNumber& BigNumber::operator-=(const BigNumber& other) {
     *this = *this - other;
     return *this;
 }
 
-BigNumber &BigNumber::operator-=(const long long &other) {
+BigNumber& BigNumber::operator-=(const long long& other) {
     *this = *this - other;
     return *this;
 }
 
-BigNumber &BigNumber::operator-=(const std::string &other) {
+BigNumber& BigNumber::operator-=(const std::string& other) {
     *this = *this - other;
     return *this;
 }
 
-BigNumber &BigNumber::operator*=(const BigNumber &other) {
+BigNumber& BigNumber::operator*=(const BigNumber& other) {
     *this = *this * other;
     return *this;
 }
 
-BigNumber &BigNumber::operator*=(const long long &other) {
+BigNumber& BigNumber::operator*=(const long long& other) {
     *this = *this * other;
     return *this;
 }
 
-BigNumber &BigNumber::operator*=(const std::string &other) {
+BigNumber& BigNumber::operator*=(const std::string& other) {
     *this = *this * other;
     return *this;
 }
 
-BigNumber &BigNumber::operator/=(const BigNumber &other) {
+BigNumber& BigNumber::operator/=(const BigNumber& other) {
     *this = *this / other;
     return *this;
 }
 
-BigNumber &BigNumber::operator/=(const long long &other) {
+BigNumber& BigNumber::operator/=(const long long& other) {
     *this = *this / other;
     return *this;
 }
 
-BigNumber &BigNumber::operator/=(const std::string &other) {
+BigNumber& BigNumber::operator/=(const std::string& other) {
     *this = *this / other;
     return *this;
 }
 
-BigNumber &BigNumber::operator++() {
+BigNumber& BigNumber::operator++() {
     *this += BigNumber("1");
     return *this;
 }
 
-BigNumber &BigNumber::operator--() {
+BigNumber& BigNumber::operator--() {
     *this -= BigNumber("1");
     return *this;
 }

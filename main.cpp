@@ -5,8 +5,9 @@
 #endif
 ////////////////////////////
 
-#include "src/bignumber.h"
 #include <assert.h>
+
+#include "src/bignumber.h"
 
 int main() {
     // Addition
@@ -29,8 +30,7 @@ int main() {
     assert((BigNumber("50") - BigNumber("60")).getString() == "-10");
     assert((BigNumber("0") - BigNumber("46")).getString() == "-46");
     assert((BigNumber("50") - BigNumber("50")).getString() == "0");
-    assert((BigNumber("482847") - BigNumber("89787941")).getString() ==
-           "-89305094");
+    assert((BigNumber("482847") - BigNumber("89787941")).getString() == "-89305094");
     assert((BigNumber("6828") - BigNumber("1")).getString() == "6827");
     assert((BigNumber("100") - BigNumber("50")).getString() == "50");
     assert((BigNumber("42") - BigNumber("49")).getString() == "-7");
